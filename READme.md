@@ -1,0 +1,9 @@
+Guilde des Veilleurs — Hackathon Cybersécurité
+
+Ce document présente les bilans techniques de sécurisation de nos bastions Ubuntu et de nos bornes Wi-Fi OpenWrt réalisés par la Guilde des Veilleurs.
+
+Au sein de notre équipe, chacun assure un rôle précis : Mohamedelmahdi est Chef de guilde et s'occupe du dépôt GitHub, de la coordination, du planning et de la démonstration finale ; Chahla est Gardienne et assure le suivi des bastions, les pastilles au mur ainsi que le contrôle des comptes et des droits ; Darice est Rempart et veille sur le pare-feu UFW, le durcissement SSH, fail2ban et la défense ; enfin, Clara est Passeuse et gère les bornes Wi-Fi OpenWrt, le réseau invité ainsi que la documentation.
+
+Concernant notre recette de spécialité « Journaux et Alertes » de la Guilde des Veilleurs, la première étape consiste à passer le bannissement SSH de fail2ban à une heure en définissant bantime = 1h dans le fichier /etc/fail2ban/jail.local, puis en vérifiant la configuration et le redémarrage du service avec sudo fail2ban-client -t && sudo systemctl restart fail2ban et sudo fail2ban-client get sshd bantime (qui doit retourner 3600). Ensuite, il faut contrôler la persistance des journaux avec ls -ld /var/log/journal && journalctl --list-boots | tail -3, lancer un audit système complet avec sudo apt update && sudo apt install -y lynis && sudo lynis audit system, et enfin valider l'obtention du tampon grâce à sudo ./scripts/specialites.sh.
+
+Lors de l'incident face au boss « Le Glitch », nous avons mené un audit complet de persistance (vérification de ~/.ssh/authorized_keys, /etc/passwd, du groupe sudo, de crontab, des services actifs et de journalctl) et verrouillé les règles de pare-feu UFW et OpenWrt, ce qui nous a permis de repousser 9 attaques sur 9 et d'obtenir un score final supérieur ou égal à 80/100 sur l'ensemble des machines de la guilde.
